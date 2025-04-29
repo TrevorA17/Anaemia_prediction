@@ -53,3 +53,33 @@ boot_model <- train(
 
 # Output model summary
 print(boot_model)
+
+# Load required library
+library(caret)
+
+# Set seed for reproducibility
+set.seed(123)
+
+# Define 10-fold cross-validation control
+cv_control <- trainControl(
+  method = "cv",
+  number = 10,
+  classProbs = TRUE,
+  summaryFunction = twoClassSummary,
+  savePredictions = "final"
+)
+
+# Ensure the response variable is a factor with correct levels
+train_data$Anaemic <- factor(train_data$Anaemic, levels = c("Yes", "No"))
+
+# Train a logistic regression model using cross-validation
+cv_model <- train(
+  Anaemic ~ ., data = train_data,
+  method = "glm",
+  family = "binomial",
+  trControl = cv_control,
+  metric = "ROC"
+)
+
+# Print model summary
+print(cv_model)
