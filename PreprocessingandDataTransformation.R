@@ -9,3 +9,12 @@ AnaemiaData <- read.csv("data/anemia_dataset.csv", colClasses = c(
 
 # View the structure of the dataset
 str(AnaemiaData)
+
+# Check if any missing values exist
+any(is.na(AnaemiaData))  # Returns TRUE if any NA is present
+
+# Count of missing values per column
+colSums(is.na(AnaemiaData))
+
+# Summary to visually inspect data completeness
+summary(AnaemiaData)
