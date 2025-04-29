@@ -74,3 +74,31 @@ summary(anova_result)
 
 # Tukey HSD post-hoc test
 TukeyHSD(anova_result)
+
+# Histogram for Hb
+hist(AnaemiaData$Hb, main = "Distribution of Hb Levels", xlab = "Hb", col = "skyblue", border = "white")
+
+# Bar plot for Anaemic status
+barplot(table(AnaemiaData$Anaemic), main = "Anaemic Status Frequency", col = c("red", "green"), ylab = "Count")
+
+# Boxplots for pixel values
+boxplot(AnaemiaData$Red_Pixel, main = "Red Pixel Distribution", col = "tomato")
+boxplot(AnaemiaData$Green_pixel, main = "Green Pixel Distribution", col = "lightgreen")
+boxplot(AnaemiaData$Blue_pixel, main = "Blue Pixel Distribution", col = "lightblue")
+
+# Boxplot of Hb by Anaemic status
+boxplot(Hb ~ Anaemic, data = AnaemiaData,
+        main = "Hb Levels by Anaemic Status", col = c("red", "green"),
+        ylab = "Haemoglobin (Hb)")
+
+# Scatterplot matrix for pixel values and Hb
+pairs(AnaemiaData[, c("Red_Pixel", "Green_pixel", "Blue_pixel", "Hb")],
+      main = "Scatterplot Matrix", col = AnaemiaData$Anaemic)
+
+# Colored scatterplot: Hb vs Red_Pixel
+plot(AnaemiaData$Red_Pixel, AnaemiaData$Hb,
+     col = ifelse(AnaemiaData$Anaemic == "Yes", "red", "green"),
+     pch = 19, xlab = "Red Pixel", ylab = "Hb", main = "Hb vs Red Pixel")
+
+legend("topright", legend = c("Anaemic", "Non-Anaemic"),
+       col = c("red", "green"), pch = 19)
