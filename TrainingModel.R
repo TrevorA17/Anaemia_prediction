@@ -83,3 +83,73 @@ cv_model <- train(
 
 # Print model summary
 print(cv_model)
+
+# Load required packages
+library(caret)
+library(gbm)
+library(randomForest)
+
+# Set seed for reproducibility
+set.seed(123)
+
+# Ensure target is a factor
+train_data$Anaemic <- factor(train_data$Anaemic, levels = c("Yes", "No"))
+
+# Define common CV control
+cv_control <- trainControl(
+  method = "cv",
+  number = 10,
+  classProbs = TRUE,
+  summaryFunction = twoClassSummary,
+  savePredictions = "final"
+)
+
+# Train Logistic Regression
+model_glm <- train(
+  Anaemic ~ ., data = train_data,
+  method = "glm",
+  family = "binomial",
+  trControl = cv_control,
+  metric = "ROC"
+)
+
+# Train Random Forest
+model_rf <- train(
+  Anaemic ~ ., data = train_data,
+  method = "rf",
+  trControl = cv_control,
+  metric = "ROC"
+)
+
+# Train Gradient Boosting Machine
+model_gbm <- train(
+  Anaemic ~ ., data = train_data,
+  method = "gbm",
+  verbose = FALSE,
+  trControl = cv_control,
+  metric = "ROC"
+)
+
+# Print summaries
+print(model_glm)
+print(model_rf)
+print(model_gbm)
+
+# Compare the three models
+results <- resamples(list(
+  GLM = model_glm,
+  RF = model_rf,
+  GBM = model_gbm
+))
+
+# Summary statistics (ROC, Sensitivity, Specificity)
+summary(results)
+
+# Boxplots for comparison
+bwplot(results, metric = "ROC")
+bwplot(results, metric = "Sens")
+bwplot(results, metric = "Spec")
+
+# Dotplot comparison
+dotplot(results, metric = "ROC")
+
