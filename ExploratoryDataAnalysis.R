@@ -65,3 +65,12 @@ cor(AnaemiaData[, c("Red_Pixel", "Green_pixel", "Blue_pixel", "Hb")])
 # Chi-square test between Anaemic and binned Hb
 Hb_group <- cut(AnaemiaData$Hb, breaks = c(0, 10, 12, Inf), labels = c("Low", "Medium", "High"))
 chisq.test(table(Hb_group, AnaemiaData$Anaemic))
+
+# One-way ANOVA: Does Hb significantly differ by Anaemic status?
+anova_result <- aov(Hb ~ Anaemic, data = AnaemiaData)
+
+# Summary of ANOVA test
+summary(anova_result)
+
+# Tukey HSD post-hoc test
+TukeyHSD(anova_result)
